@@ -9,8 +9,9 @@ import networkx as nx
 
 from cirq.contrib.svg import SVGCircuit
 
-## Blog point: implementation of pandas on 28 Feb 2026
+## Blog point: implementation of pandas and random on 28 Feb 2026
 import pandas as pd
+import random
 
 
 """Test file for Google's implementation of QAOA on Sycamore."""
@@ -19,7 +20,7 @@ working_device = cirq_google.Sycamore
 # print(working_device)
 
 # Set the seed to determine the problem instance.
-np.random.seed(seed=11)
+np.random.seed(seed=15)
 
 # Identify working qubits from the device.
 device_qubits = working_device.metadata.qubit_set
@@ -37,7 +38,7 @@ nx.set_edge_attributes(
 # Draw the working_graph on a 2d grid
 pos = {q: (q.col, -q.row) for q in working_graph.nodes()}
 nx.draw(working_graph, pos=pos, with_labels=True, node_size=1000)
-#plt.show()
+plt.show()
 
 
 # Symbols for the rotation angles in the QAOA circuit.
@@ -155,3 +156,68 @@ best_exp_index = np.unravel_index(np.argmax(exp_values), exp_values.shape)
 print(best_exp_index, type(best_exp_index))
 best_parameters = par_values[best_exp_index]
 print(f"Best control parameters: {best_parameters}")
+
+#Number of candidate cuts to sample.
+num_cuts = 100
+candidate_cuts = sim.sample(
+    qaoa_circuit,
+    params = {alpha: best_parameters[0], beta: best_parameters[1]},
+    repetitions = num_cuts,
+)
+
+#variables to store best cut partitions and cut size.
+best_qaoa_S_partition = set()
+best_qaoa_T_partition = set()
+best_qaoa_cut_size = -np.inf
+
+# Analyze each candidate
+for i in range(num_cuts):
+    candidate = candidate_cuts.iloc[i]
+    one_qubits = set(candidate[candidate == 1].index)
+    S_partition = set()
+    T_partition = set()
+    for node in working_graph:
+        if str(node) in one_qubits:
+            #If 1 measured at node to S partition
+            S_partition.add(node)
+        else:
+            # Otherwise add to T partition
+            T_partition.add(node)
+
+    cut_size = nx.cut_size(working_graph, S_partition, T_partition, weight = "weight")
+
+    # If a better cut is found, update best_qaoa_cut variables
+    if cut_size > best_qaoa_cut_size:
+        best_qaoa_cut_size = cut_size
+        best_qaoa_S_partition = S_partition
+        best_qaoa_T_partition = T_partition
+
+""" This is randomly picking cuts to determine the best one"""
+best_random_S_partition = set()
+best_random_S_partition = set()
+best_random_cut_size = 9999
+
+#Randomly build candidate sets.
+for i in range(num_cuts):
+    S_partition = set()
+    T_partition = set()
+    for node in working_graph:
+        if random.random() < 0.5:
+            # If coin flip is heads, add to S partition
+            S_partition.add(node)
+        else:
+            T_partition.add(node)
+    
+    cut_size = nx.cut_size(working_graph, S_partition, T_partition, weight = "weight")
+
+    # If a better cut is found update best_random_cut variables
+    if cut_size < best_random_cut_size:
+        best_random_cut_size = cut_size
+        best_random_S_partition = S_partition
+        best_random_T_partition = T_partition
+
+print("----QAOA----")
+output_cut(best_qaoa_S_partition)
+
+print("\n\n----Random----")
+output_cut(best_random_S_partition)
