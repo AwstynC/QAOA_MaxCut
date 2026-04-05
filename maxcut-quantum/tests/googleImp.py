@@ -63,7 +63,6 @@ qaoa_circuit = cirq.Circuit(
 )
 SVGCircuit(qaoa_circuit)
 
-
 ## Blog point coding: implementation of pandas on 28 Feb 2026
 ### Calculate the expected value of the QAOA cost Hamiltonion
 
@@ -194,8 +193,8 @@ for i in range(num_cuts):
 
 """ This is randomly picking cuts to determine the best one"""
 best_random_S_partition = set()
-best_random_S_partition = set()
-best_random_cut_size = 9999
+best_random_T_partition = set()
+best_random_cut_size = -np.inf
 
 #Randomly build candidate sets.
 for i in range(num_cuts):
@@ -211,7 +210,7 @@ for i in range(num_cuts):
     cut_size = nx.cut_size(working_graph, S_partition, T_partition, weight = "weight")
 
     # If a better cut is found update best_random_cut variables
-    if cut_size < best_random_cut_size:
+    if cut_size > best_random_cut_size:
         best_random_cut_size = cut_size
         best_random_S_partition = S_partition
         best_random_T_partition = T_partition

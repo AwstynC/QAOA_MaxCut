@@ -15,19 +15,6 @@ def generate_random_graph(n, edge_prob=0.5, seed=None):
                 edges.append((i, j))
     return edges
 
-
-def cut_value(bitstring, edges):
-    total = 0
-    for u, v in edges:
-        if bitstring[u] != bitstring[v]:
-            total += 1
-    return total
-
-
-def int_to_bitlist(x, n):
-    return [(x >> i) & 1 for i in range(n)]
-
-
 def cut_value(bitstring, edges):
     """
     Compute cut value for a given bitstring.
@@ -40,6 +27,16 @@ def cut_value(bitstring, edges):
             total += w
     return total
 
+def cut_value_unweighted(bitstring, edges):
+    total = 0
+    for u, v in edges:
+        if bitstring[u] != bitstring[v]:
+            total += 1
+    return total
 
 def int_to_bitlist(x, n):
+    """
+    Conver integer x to a list of n bitst (LSB first).
+    Example: int_to_bitlist(6, 4) -> [0, 1, 1, 0]
+    """
     return [(x >> i) & 1 for i in range(n)]
