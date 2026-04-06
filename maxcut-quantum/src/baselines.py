@@ -2,7 +2,7 @@
 
 from src.graph import cut_value, int_to_bitlist
 
-def brut_force(n, edges):
+def brute_force(n, edges):
     """
     Find the max cut by extensively checking all 2^n bitstrings.
     Practicality: Small graph of n <= 20.

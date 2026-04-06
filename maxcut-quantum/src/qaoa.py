@@ -37,8 +37,8 @@ def estimate_cost(n, edges, samples):
     cost_value = 0.0
 
     for u, v, w in edges:
-        u_samples = samples[str(u)]
-        v_samples = samples[str(v)]
+        u_samples = samples[f"q({u})"]
+        v_samples = samples[f"q({v})"]
 
         u_signs = (-1) ** u_samples
         v_signs = (-1) ** v_samples
@@ -89,7 +89,7 @@ def run_qaoa(n, edges, grid_size = 5, repetitions=20000):
 
     for i in range(num_cuts):
         candidate = candidate_cuts.iloc[i]
-        bitstring = [int(candidate[str(q)]) for q in range(n)]
+        bitstring = [int(candidate[f"q({q})"]) for q in range(n)]
 
         cut_val = sum(
             w for u, v, w in edges
