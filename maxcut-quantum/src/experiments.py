@@ -74,7 +74,7 @@ def run_scaling_experiment(node_sizes, edge_prob = 0.5, seed = 42, grid_size = 5
 
     # Summary table
     print("\n\n=== Scaling Summary ===")
-    print(f"{'n':4} {'Brute Force':>12} {'Greedy':>8} {'Greedy Ratio':>13} {'QAOA':>8} {'QAOA Ratio':>11}")
+    print(f"{'n':>4}  {'Brute Force':>12}  {'Greedy':>8}  {'Greedy Ratio':>13}  {'QAOA':>8}  {'QAOA Ratio':>11}")
     print("-" * 65)
     for r in all_results:
         print(
