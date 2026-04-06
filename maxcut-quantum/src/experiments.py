@@ -50,7 +50,7 @@ def run_experiment(n, edge_prob = 0.5, seed = None, grid_size = 5, repetitions =
     return {
         "n": n,
         "edges": edges,
-        "brute_force": {"bitstring": bf_bits, "cut_value": bf_val, "ratio": bf_ratio},
+        "brute_force": {"bitstring": bf_bits, "cut_value": bf_val},
         "greedy":      {"bitstring": gr_bits, "cut_value": gr_val, "ratio": gr_ratio},
         "qaoa":        {"bitstring": qa_bits, "cut_value": qa_val, "ratio": qa_ratio}
     }
