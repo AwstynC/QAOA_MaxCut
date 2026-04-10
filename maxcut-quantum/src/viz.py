@@ -1,6 +1,8 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import os
 
+os.makedirs("output_plots", exist_ok=True)
 
 def draw_graph(edges, n, title=None, seed=0):
     G = nx.Graph()
@@ -23,7 +25,9 @@ def draw_graph(edges, n, title=None, seed=0):
         plt.title(title)
 
     plt.margins(0.1)
-    plt.show()
+    plt.savefig(f"graph_n{n}.png", bbox_inches='tight')
+    plt.close()
+    print(f"Saved: output_plots/graph_n{n}.png")
 
 def draw_cut(n, edges, bitstring, title = None, seed = 0):
     """
@@ -62,5 +66,9 @@ def draw_cut(n, edges, bitstring, title = None, seed = 0):
 
     if title:
         plt.title(title)
+
     plt.margins(0.1)
-    plt.show()
+    filename = title.replace(" ", "_").replace("—", "-") if title else f"cut_n{n}"
+    plt.savefig(f"output_plots/{filename}.png", bbox_inches="tight")
+    plt.close()
+    print(f"Saved: output_plots/{filename}.png")

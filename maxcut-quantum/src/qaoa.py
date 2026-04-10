@@ -1,6 +1,10 @@
 import sympy
 import numpy as np
 import cirq
+import os
+import webbrowser
+from cirq.contrib.svg import SVGCircuit
+
 
 def build_qaoa_circuit(n, edges, alpha, beta):
     """
@@ -27,6 +31,16 @@ def build_qaoa_circuit(n, edges, alpha, beta):
         # Measure qubits
         (cirq.measure(q) for q in qubits)
     )
+    
+    # Save and open circuit diagram in browser.
+    # System prompt will ask for preferred browser.
+    svg_data = SVGCircuit(circuit)._repr_svg_()
+    svg_path = os.path.abspath(f"qaoa_circuit_n{n}.svg")
+    with open(svg_path, "w") as f:
+        f.write(svg_data)
+    webbrowser.open(f"file://{svg_path}")
+    print(f"Circuit diagram savded: {svg_path}")
+    
     return circuit
 
 def estimate_cost(n, edges, samples):
